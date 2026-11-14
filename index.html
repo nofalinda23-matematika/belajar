@@ -3,16 +3,16 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Kuis Interaktif Materi Bilangan SMP</title>
+  <title>Daftar Nilai Online Multi-Kelas</title>
   <style>
     :root {
-      --primary: #0f766e;
-      --primary-hover: #115e59;
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
       --success: #16a34a;
-      --success-bg: #dcfce7;
+      --success-hover: #15803d;
       --danger: #dc2626;
-      --danger-bg: #fee2e2;
-      --bg: #f0fdfa;
+      --danger-hover: #b91c1c;
+      --bg: #f8fafc;
       --card: #ffffff;
       --text: #1e293b;
       --border: #cbd5e1;
@@ -28,350 +28,385 @@
       padding: 20px;
       background-color: var(--bg);
       color: var(--text);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
     }
 
-    .quiz-container {
+    .app-container {
+      max-width: 1100px;
+      margin: 0 auto;
       background: var(--card);
-      width: 100%;
-      max-width: 680px;
-      border-radius: 16px;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+      border-radius: 14px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
       border: 1px solid var(--border);
       overflow: hidden;
     }
 
-    .quiz-header {
-      background: var(--primary);
+    /* Header */
+    .header {
+      background: linear-gradient(135deg, #1e3a8a, #2563eb);
       color: white;
       padding: 20px 24px;
-    }
-
-    .quiz-header h1 {
-      margin: 0 0 6px 0;
-      font-size: 1.4rem;
-    }
-
-    .quiz-meta {
       display: flex;
+      flex-wrap: wrap;
       justify-content: space-between;
-      font-size: 0.9rem;
-      opacity: 0.95;
-    }
-
-    .progress-bar {
-      height: 6px;
-      background: #e2e8f0;
-      width: 100%;
-    }
-
-    .progress-fill {
-      height: 100%;
-      background: #10b981;
-      width: 0%;
-      transition: width 0.3s ease;
-    }
-
-    .quiz-body {
-      padding: 24px;
-    }
-
-    .topic-badge {
-      display: inline-block;
-      background: #ccfbf1;
-      color: #0f766e;
-      font-size: 0.8rem;
-      font-weight: 700;
-      padding: 4px 10px;
-      border-radius: 999px;
-      margin-bottom: 12px;
-    }
-
-    .question-text {
-      font-size: 1.12rem;
-      font-weight: 600;
-      margin-bottom: 20px;
-      line-height: 1.5;
-    }
-
-    .options-list {
-      display: flex;
-      flex-direction: column;
+      align-items: center;
       gap: 12px;
     }
 
-    .option-btn {
-      text-align: left;
-      padding: 14px 16px;
-      border: 2px solid var(--border);
-      border-radius: 10px;
-      background: #ffffff;
-      font-size: 1rem;
-      color: var(--text);
+    .header h1 {
+      margin: 0;
+      font-size: 1.5rem;
+    }
+
+    .header p {
+      margin: 4px 0 0 0;
+      font-size: 0.9rem;
+      opacity: 0.9;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    /* Navigasi Tab Kelas */
+    .tabs-bar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      background: #f1f5f9;
+      padding: 10px 20px 0;
+      border-bottom: 1px solid var(--border);
+      gap: 6px;
+    }
+
+    .tab-btn {
+      padding: 10px 18px;
+      border: 1px solid transparent;
+      border-bottom: none;
+      border-radius: 8px 8px 0 0;
+      background: #e2e8f0;
+      color: #475569;
+      font-weight: 600;
       cursor: pointer;
+      font-size: 0.95rem;
       transition: all 0.2s;
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 8px;
     }
 
-    .option-btn:hover:not(:disabled) {
-      border-color: var(--primary);
-      background: #f0fdfa;
+    .tab-btn:hover {
+      background: #cbd5e1;
+      color: #0f172a;
     }
 
-    .option-btn:disabled {
-      cursor: default;
-    }
-
-    .option-btn.correct {
-      border-color: var(--success);
-      background: var(--success-bg);
-      color: #14532d;
-      font-weight: 600;
-    }
-
-    .option-btn.wrong {
-      border-color: var(--danger);
-      background: var(--danger-bg);
-      color: #7f1d1d;
-    }
-
-    .option-label {
-      display: inline-flex;
-      justify-content: center;
-      align-items: center;
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      background: #e2e8f0;
-      font-weight: bold;
-      font-size: 0.9rem;
-      flex-shrink: 0;
-    }
-
-    .feedback-box {
-      margin-top: 20px;
-      padding: 14px 16px;
-      border-radius: 10px;
-      font-size: 0.95rem;
-      line-height: 1.5;
-      display: none;
-    }
-
-    .feedback-box.show {
-      display: block;
-    }
-
-    .feedback-box.correct {
-      background: #f0fdf4;
-      border-left: 4px solid var(--success);
-      color: #166534;
-    }
-
-    .feedback-box.wrong {
-      background: #fef2f2;
-      border-left: 4px solid var(--danger);
-      color: #991b1b;
-    }
-
-    .quiz-footer {
-      padding: 16px 24px 24px;
-      display: flex;
-      justify-content: flex-end;
-    }
-
-    .btn-next {
-      background: var(--primary);
-      color: white;
-      border: none;
-      padding: 12px 24px;
-      border-radius: 8px;
-      font-size: 1rem;
-      font-weight: 600;
-      cursor: pointer;
-      display: none;
-    }
-
-    .btn-next:hover {
-      background: var(--primary-hover);
-    }
-
-    /* Layar Hasil Akhir */
-    .result-screen {
-      padding: 32px 24px;
-      text-align: center;
-      display: none;
-    }
-
-    .score-circle {
-      width: 120px;
-      height: 120px;
-      border-radius: 50%;
-      background: #f0fdfa;
-      border: 6px solid var(--primary);
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      margin: 0 auto 20px;
-    }
-
-    .score-number {
-      font-size: 2.2rem;
-      font-weight: 800;
+    .tab-btn.active {
+      background: #ffffff;
       color: var(--primary);
+      border-color: var(--border);
+      margin-bottom: -1px;
+      padding-bottom: 11px;
     }
 
-    .score-label {
-      font-size: 0.8rem;
-      color: #475569;
-      font-weight: 600;
-    }
-
-    .btn-restart {
-      background: var(--primary);
+    .btn-add-class {
+      padding: 8px 14px;
+      margin-bottom: 6px;
+      background: var(--success);
       color: white;
       border: none;
-      padding: 12px 28px;
       border-radius: 8px;
-      font-size: 1rem;
       font-weight: 600;
+      font-size: 0.9rem;
       cursor: pointer;
-      margin-top: 16px;
+      margin-left: auto;
     }
 
-    .btn-restart:hover {
+    .btn-add-class:hover {
+      background: var(--success-hover);
+    }
+
+    /* Area Kontrol Siswa */
+    .toolbar {
+      padding: 18px 24px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    .add-student-form {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      flex: 1;
+    }
+
+    input[type="text"], input[type="number"] {
+      padding: 8px 12px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 0.95rem;
+    }
+
+    input[type="number"] {
+      width: 75px;
+      text-align: center;
+    }
+
+    input[type="number"]:focus, input[type="text"]:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+
+    .btn {
+      padding: 8px 16px;
+      border: none;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+
+    .btn-primary:hover {
       background: var(--primary-hover);
+    }
+
+    .btn-success {
+      background: var(--success);
+      color: white;
+    }
+
+    .btn-success:hover {
+      background: var(--success-hover);
+    }
+
+    .btn-danger {
+      background: var(--danger);
+      color: white;
+      padding: 6px 10px;
+      font-size: 0.85rem;
+    }
+
+    .btn-danger:hover {
+      background: var(--danger-hover);
+    }
+
+    .btn-outline {
+      background: rgba(255, 255, 255, 0.15);
+      color: white;
+      border: 1px solid rgba(255, 255, 255, 0.4);
+    }
+
+    .btn-outline:hover {
+      background: rgba(255, 255, 255, 0.25);
+    }
+
+    /* Tabel Nilai */
+    .table-wrapper {
+      padding: 0 24px 24px;
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 16px;
+      font-size: 0.95rem;
+    }
+
+    th, td {
+      border: 1px solid var(--border);
+      padding: 10px 12px;
+      text-align: center;
+    }
+
+    th {
+      background: #f8fafc;
+      color: #334155;
+      font-weight: 700;
+    }
+
+    td.name-col {
+      text-align: left;
+      font-weight: 500;
+    }
+
+    tr:hover {
+      background-color: #f8fafc;
+    }
+
+    .badge {
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 0.85rem;
+    }
+
+    .grade-A { background: #dcfce7; color: #166534; }
+    .grade-B { background: #dbeafe; color: #1e40af; }
+    .grade-C { background: #fef9c3; color: #854d0e; }
+    .grade-D { background: #fee2e2; color: #991b1b; }
+
+    .summary-bar {
+      margin-top: 16px;
+      padding: 12px 16px;
+      background: #f1f5f9;
+      border-radius: 8px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.9rem;
+      gap: 10px;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 32px;
+      color: #64748b;
     }
   </style>
 </head>
 <body>
 
-  <div class="quiz-container">
-    <!-- Header Kuis -->
-    <div class="quiz-header">
-      <h1>Kuis Matematika: Bilangan</h1>
-      <div class="quiz-meta">
-        <span id="questionCounter">Soal 1 dari 10</span>
-        <span id="scoreDisplay">Skor: 0</span>
+  <div class="app-container">
+    <!-- Header -->
+    <div class="header">
+      <div>
+        <h1>Daftar Nilai Siswa Online</h1>
+        <p>Data tersimpan otomatis di perangkat Anda &bull; Mendukung penambahan kelas tanpa batas</p>
+      </div>
+      <div class="header-actions">
+        <button class="btn btn-success" onclick="exportToCSV()">📥 Unduh Excel (CSV)</button>
+        <button class="btn btn-outline" onclick="resetDefaultData()">↺ Reset Data Awal</button>
       </div>
     </div>
 
-    <!-- Bar Progres -->
-    <div class="progress-bar">
-      <div class="progress-fill" id="progressFill"></div>
+    <!-- Tab Daftar Kelas -->
+    <div class="tabs-bar" id="tabsBar">
+      <!-- Tab kelas akan dimuat otomatis oleh JavaScript -->
     </div>
 
-    <!-- Badan Soal -->
-    <div class="quiz-body" id="quizBody">
-      <span class="topic-badge" id="topicBadge">Kategori</span>
-      <div class="question-text" id="questionText">Memuat soal...</div>
-      <div class="options-list" id="optionsList"></div>
-      <div class="feedback-box" id="feedbackBox"></div>
-    </div>
-
-    <!-- Tombol Lanjut -->
-    <div class="quiz-footer" id="quizFooter">
-      <button class="btn-next" id="nextBtn" onclick="nextQuestion()">Soal Berikutnya &rarr;</button>
-    </div>
-
-    <!-- Layar Hasil Akhir -->
-    <div class="result-screen" id="resultScreen">
-      <div class="score-circle">
-        <span class="score-number" id="finalScore">0</span>
-        <span class="score-label">NILAI AKHIR</span>
+    <!-- Toolbar Tambah Siswa & Hapus Kelas -->
+    <div class="toolbar">
+      <div class="add-student-form">
+        <input type="text" id="newStudentName" placeholder="Ketik nama siswa baru..." onkeypress="handleEnter(event)" />
+        <button class="btn btn-primary" onclick="addStudent()">+ Tambah Siswa</button>
       </div>
-      <h2 id="resultTitle">Kuis Selesai!</h2>
-      <p id="resultSummary">Kamu menjawab benar X dari 10 soal.</p>
-      <button class="btn-restart" onclick="restartQuiz()">↺ Ulangi Kuis</button>
+      <div>
+        <button class="btn btn-danger" onclick="deleteCurrentClass()" id="deleteClassBtn">🗑 Hapus Kelas Ini</button>
+      </div>
+    </div>
+
+    <!-- Area Tabel Nilai -->
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th style="width: 50px;">No</th>
+            <th style="text-align: left;">Nama Siswa</th>
+            <th style="width: 100px;">Tugas</th>
+            <th style="width: 100px;">UH / Kuis</th>
+            <th style="width: 100px;">UTS</th>
+            <th style="width: 100px;">UAS</th>
+            <th style="width: 110px;">Rata-rata</th>
+            <th style="width: 100px;">Predikat</th>
+            <th style="width: 80px;">Aksi</th>
+          </tr>
+        </thead>
+        <tbody id="studentTableBody">
+          <!-- Baris siswa dimuat otomatis -->
+        </tbody>
+      </table>
+
+      <div class="summary-bar" id="summaryBar">
+        <!-- Ringkasan kelas -->
+      </div>
     </div>
   </div>
 
   <script>
-    const quizData = [
-      {
-        topic: "Bilangan Bulat",
-        question: "Hasil dari -18 + 24 : (-6) × 3 adalah ....",
-        options: ["-30", "-6", "-3", "30"],
-        answer: 0,
-        explanation: "Dahulukan pembagian dan perkalian dari kiri: 24 : (-6) = -4, lalu -4 × 3 = -12. Kemudian -18 + (-12) = -30."
-      },
-      {
-        topic: "Bilangan Pecahan",
-        question: "Hasil dari 2/3 + 3/4 - 1/2 adalah ....",
-        options: ["4/5", "11/12", "13/12", "5/6"],
-        answer: 1,
-        explanation: "Samakan penyebut menjadi 12: (8/12) + (9/12) - (6/12) = 11/12."
-      },
-      {
-        topic: "Perbandingan Bilangan",
-        question: "Urutan bilangan berikut dari yang terbesar ke terkecil adalah ....",
-        options: [
-          "0,65 ; 5/8 ; 60% ; 0,55",
-          "5/8 ; 0,65 ; 60% ; 0,55",
-          "60% ; 0,65 ; 5/8 ; 0,55",
-          "0,65 ; 60% ; 5/8 ; 0,55"
-        ],
-        answer: 0,
-        explanation: "Ubah semua ke desimal: 0,65 = 0,650 | 5/8 = 0,625 | 60% = 0,600 | 0,55 = 0,550. Urutan terbesar ke terkecil: 0,65 ; 5/8 ; 60% ; 0,55."
-      },
-      {
-        topic: "KPK & FPB",
-        question: "Lampu A menyala setiap 12 detik, sedangkan lampu B menyala setiap 18 detik. Jika keduanya menyala bersama pada pukul 08.00, pada pukul berapa keduanya akan menyala bersama lagi untuk kedua kalinya?",
-        options: ["08.00.24", "08.00.30", "08.00.36", "08.01.12"],
-        answer: 2,
-        explanation: "Cari KPK dari 12 dan 18. Faktorisasi: 12 = 2² × 3, 18 = 2 × 3². KPK = 2² × 3² = 36 detik. Jadi menyala bersama lagi pukul 08.00.36."
-      },
-      {
-        topic: "Bilangan Berpangkat",
-        question: "Nilai dari 2⁵ + 3³ - 5² adalah ....",
-        options: ["24", "34", "44", "54"],
-        answer: 1,
-        explanation: "2⁵ = 32, 3³ = 27, dan 5² = 25. Maka 32 + 27 - 25 = 34."
-      },
-      {
-        topic: "Bilangan Desimal",
-        question: "Hasil dari 4,5 × 0,4 + 1,2 adalah ....",
-        options: ["1,8", "3,0", "3,2", "19,2"],
-        answer: 1,
-        explanation: "4,5 × 0,4 = 1,8. Kemudian 1,8 + 1,2 = 3,0."
-      },
-      {
-        topic: "Bilangan Prima",
-        question: "Jumlah semua bilangan prima yang terletak di antara 10 dan 25 adalah ....",
-        options: ["72", "83", "85", "98"],
-        answer: 1,
-        explanation: "Bilangan prima antara 10 dan 25 adalah 11, 13, 17, 19, dan 23. Jumlahnya: 11 + 13 + 17 + 19 + 23 = 83."
-      },
-      {
-        topic: "Persen & Pecahan",
-        question: "Ibu membeli baju seharga Rp150.000,00 dengan diskon 20%. Uang yang harus dibayarkan Ibu adalah ....",
-        options: ["Rp30.000,00", "Rp120.000,00", "Rp130.000,00", "Rp140.000,00"],
-        answer: 1,
-        explanation: "Besar diskon = 20% × 150.000 = Rp30.000. Harga bayar = 150.000 - 30.000 = Rp120.000,00."
-      },
-      {
-        topic: "Pola Bilangan",
-        question: "Dua suku berikutnya dari barisan bilangan 2, 5, 9, 14, 20, ..., ... adalah ....",
-        options: ["26, 33", "27, 35", "27, 34", "28, 36"],
-        answer: 1,
-        explanation: "Pola penambahannya bertingkat: +3, +4, +5, +6. Maka berikutnya +7 (20 + 7 = 27) dan +8 (27 + 8 = 35)."
-      },
-      {
-        topic: "Akar Kuadrat",
-        question: "Hasil dari √144 + √81 - √64 adalah ....",
-        options: ["11", "13", "15", "29"],
-        answer: 1,
-        explanation: "√144 = 12, √81 = 9, dan √64 = 8. Maka 12 + 9 - 8 = 13."
+    const STORAGE_KEY = 'daftar_nilai_online_v1';
+
+    // Data awal 4 kelas
+    const defaultData = {
+      activeClassId: 'kls-1',
+      classes: [
+        {
+          id: 'kls-1',
+          name: 'Kelas VII-A',
+          students: [
+            { id: 1, name: 'Ahmad Fauzan', tugas: 85, uh: 88, uts: 82, uas: 90 },
+            { id: 2, name: 'Bunga Citra', tugas: 92, uh: 90, uts: 88, uas: 94 },
+            { id: 3, name: 'Daffa Pratama', tugas: 75, uh: 70, uts: 78, uas: 80 }
+          ]
+        },
+        {
+          id: 'kls-2',
+          name: 'Kelas VII-B',
+          students: [
+            { id: 1, name: 'Citra Kirana', tugas: 88, uh: 85, uts: 84, uas: 89 },
+            { id: 2, name: 'Dimas Anggara', tugas: 68, uh: 72, uts: 65, uas: 70 }
+          ]
+        },
+        {
+          id: 'kls-3',
+          name: 'Kelas VIII-A',
+          students: [
+            { id: 1, name: 'Eka Putri', tugas: 95, uh: 92, uts: 90, uas: 96 },
+            { id: 2, name: 'Farhan Kamil', tugas: 80, uh: 78, uts: 82, uas: 85 }
+          ]
+        },
+        {
+          id: 'kls-4',
+          name: 'Kelas VIII-B',
+          students: [
+            { id: 1, name: 'Gita Gutawa', tugas: 84, uh: 86, uts: 80, uas: 88 },
+            { id: 2, name: 'Hendra Setiawan', tugas: 76, uh: 74, uts: 79, uas: 81 }
+          ]
+        }
+      ]
+    };
+
+    let appData = loadData();
+
+    function loadData() {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) {
+        try {
+          return JSON.parse(saved);
+        } catch (e) {
+          return JSON.parse(JSON.stringify(defaultData));
+        }
       }
-    ];
+      return JSON.parse(JSON.stringify(defaultData));
+    }
 
-    let currentIndex = 0;
-    let score = 0;
-    let correctCount = 0;
-    const optionLetters = ["A", "B", "C", "D"];
+    function saveData() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
+    }
 
+    function getActiveClass() {
+      return appData.classes.find(c => c.id === appData.activeClassId) || appData.classes[0];
+    }
+
+    // Render Tab Kelas
+    function renderTabs() {
+      const tabsBar = document.getElementById('tabsBar');
+      tabsBar.innerHTML = '';
+
+      appData.classes.forEach(cls => {
+        const btn = document.createElement('button');
+        btn.className = `tab-btn ${cls.id === appData.activeClassId ? 'active' : ''}`;
+        btn.innerHTML = `<span>${cls.name}</span> <small style="opacity:0.7;">(${cls.students.length})</small>`;
+        btn.onclick = () => {
+          appData.activeClassId = cls.id;
+          saveData();
