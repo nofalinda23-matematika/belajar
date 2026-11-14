@@ -3,16 +3,16 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Kuis Interaktif Bilangan Bulat SMP</title>
+  <title>Kuis Interaktif Materi Bilangan SMP</title>
   <style>
     :root {
-      --primary: #2563eb;
-      --primary-hover: #1d4ed8;
+      --primary: #0f766e;
+      --primary-hover: #115e59;
       --success: #16a34a;
       --success-bg: #dcfce7;
       --danger: #dc2626;
       --danger-bg: #fee2e2;
-      --bg: #f1f5f9;
+      --bg: #f0fdfa;
       --card: #ffffff;
       --text: #1e293b;
       --border: #cbd5e1;
@@ -37,7 +37,7 @@
     .quiz-container {
       background: var(--card);
       width: 100%;
-      max-width: 650px;
+      max-width: 680px;
       border-radius: 16px;
       box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
       border: 1px solid var(--border);
@@ -59,7 +59,7 @@
       display: flex;
       justify-content: space-between;
       font-size: 0.9rem;
-      opacity: 0.9;
+      opacity: 0.95;
     }
 
     .progress-bar {
@@ -70,7 +70,7 @@
 
     .progress-fill {
       height: 100%;
-      background: #22c55e;
+      background: #10b981;
       width: 0%;
       transition: width 0.3s ease;
     }
@@ -79,8 +79,19 @@
       padding: 24px;
     }
 
+    .topic-badge {
+      display: inline-block;
+      background: #ccfbf1;
+      color: #0f766e;
+      font-size: 0.8rem;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 999px;
+      margin-bottom: 12px;
+    }
+
     .question-text {
-      font-size: 1.15rem;
+      font-size: 1.12rem;
       font-weight: 600;
       margin-bottom: 20px;
       line-height: 1.5;
@@ -109,7 +120,7 @@
 
     .option-btn:hover:not(:disabled) {
       border-color: var(--primary);
-      background: #eff6ff;
+      background: #f0fdfa;
     }
 
     .option-btn:disabled {
@@ -200,7 +211,7 @@
       width: 120px;
       height: 120px;
       border-radius: 50%;
-      background: #eff6ff;
+      background: #f0fdfa;
       border: 6px solid var(--primary);
       display: flex;
       flex-direction: column;
@@ -243,7 +254,7 @@
   <div class="quiz-container">
     <!-- Header Kuis -->
     <div class="quiz-header">
-      <h1>Kuis Matematika: Bilangan Bulat</h1>
+      <h1>Kuis Matematika: Bilangan</h1>
       <div class="quiz-meta">
         <span id="questionCounter">Soal 1 dari 10</span>
         <span id="scoreDisplay">Skor: 0</span>
@@ -257,6 +268,7 @@
 
     <!-- Badan Soal -->
     <div class="quiz-body" id="quizBody">
+      <span class="topic-badge" id="topicBadge">Kategori</span>
       <div class="question-text" id="questionText">Memuat soal...</div>
       <div class="options-list" id="optionsList"></div>
       <div class="feedback-box" id="feedbackBox"></div>
@@ -282,69 +294,79 @@
   <script>
     const quizData = [
       {
-        question: "Hasil dari -15 + 8 - (-12) adalah ....",
-        options: ["-19", "-11", "5", "19"],
-        answer: 2,
-        explanation: "-15 + 8 - (-12) = -7 + 12 = 5. Ingat bahwa tanda negatif bertemu negatif berubah menjadi positif."
-      },
-      {
-        question: "Suhu di dalam kulkas sebelum dihidupkan adalah 24°C. Setelah dihidupkan selama 4 jam, suhunya turun sebesar 29°C. Suhu kulkas sekarang adalah ....",
-        options: ["-5°C", "-4°C", "4°C", "5°C"],
+        topic: "Bilangan Bulat",
+        question: "Hasil dari -18 + 24 : (-6) × 3 adalah ....",
+        options: ["-30", "-6", "-3", "30"],
         answer: 0,
-        explanation: "Suhu awal 24°C turun 29°C ditulis: 24 - 29 = -5°C."
+        explanation: "Dahulukan pembagian dan perkalian dari kiri: 24 : (-6) = -4, lalu -4 × 3 = -12. Kemudian -18 + (-12) = -30."
       },
       {
-        question: "Hasil dari (-24) : 6 × (-3) adalah ....",
-        options: ["-12", "-4", "4", "12"],
-        answer: 3,
-        explanation: "Kerjakan dari kiri ke kanan: (-24) : 6 = -4, lalu -4 × (-3) = 12 (negatif kali negatif menghasilkan positif)."
+        topic: "Bilangan Pecahan",
+        question: "Hasil dari 2/3 + 3/4 - 1/2 adalah ....",
+        options: ["4/5", "11/12", "13/12", "5/6"],
+        answer: 1,
+        explanation: "Samakan penyebut menjadi 12: (8/12) + (9/12) - (6/12) = 11/12."
       },
       {
-        question: "Urutan bilangan bulat berikut dari yang terkecil hingga terbesar yang benar adalah ....",
+        topic: "Perbandingan Bilangan",
+        question: "Urutan bilangan berikut dari yang terbesar ke terkecil adalah ....",
         options: [
-          "-12, -8, -15, 0, 4",
-          "-15, -12, -8, 0, 4",
-          "0, 4, -8, -12, -15",
-          "-8, -12, -15, 0, 4"
+          "0,65 ; 5/8 ; 60% ; 0,55",
+          "5/8 ; 0,65 ; 60% ; 0,55",
+          "60% ; 0,65 ; 5/8 ; 0,55",
+          "0,65 ; 60% ; 5/8 ; 0,55"
         ],
-        answer: 1,
-        explanation: "Pada garis bilangan, semakin ke kiri letak bilangan negatif, semakin kecil nilainya. Jadi -15 < -12 < -8 < 0 < 4."
+        answer: 0,
+        explanation: "Ubah semua ke desimal: 0,65 = 0,650 | 5/8 = 0,625 | 60% = 0,600 | 0,55 = 0,550. Urutan terbesar ke terkecil: 0,65 ; 5/8 ; 60% ; 0,55."
       },
       {
-        question: "Nilai dari 36 + (-18) : 3 × (-2) adalah ....",
-        options: ["-12", "24", "48", "60"],
+        topic: "KPK & FPB",
+        question: "Lampu A menyala setiap 12 detik, sedangkan lampu B menyala setiap 18 detik. Jika keduanya menyala bersama pada pukul 08.00, pada pukul berapa keduanya akan menyala bersama lagi untuk kedua kalinya?",
+        options: ["08.00.24", "08.00.30", "08.00.36", "08.01.12"],
         answer: 2,
-        explanation: "Dahulukan pembagian dan perkalian: (-18) : 3 = -6, lalu -6 × (-2) = 12. Terakhir jumlahkan: 36 + 12 = 48."
+        explanation: "Cari KPK dari 12 dan 18. Faktorisasi: 12 = 2² × 3, 18 = 2 × 3². KPK = 2² × 3² = 36 detik. Jadi menyala bersama lagi pukul 08.00.36."
       },
       {
-        question: "Seekor lumba-lumba berenang pada kedalaman 12 meter di bawah permukaan laut. Kemudian lumba-lumba itu melompat setinggi 16 meter ke atas. Ketinggian lumba-lumba sekarang di atas permukaan laut adalah ....",
-        options: ["4 meter", "16 meter", "28 meter", "-4 meter"],
-        answer: 0,
-        explanation: "Posisi awal = -12 m. Melompat ke atas 16 m: -12 + 16 = 4 meter di atas permukaan laut."
-      },
-      {
-        question: "Jika p = -4, q = 3, dan r = -2, maka nilai dari 2p - 3q + 4r adalah ....",
-        options: ["-25", "-9", "-1", "9"],
-        answer: 0,
-        explanation: "2(-4) - 3(3) + 4(-2) = -8 - 9 - 8 = -25."
-      },
-      {
-        question: "Dalam sebuah kompetisi matematika, jawaban benar diberi skor 4, salah diberi skor -2, dan tidak dijawab diberi skor -1. Dari 40 soal, Andi menjawab benar 28 soal dan salah 7 soal. Total skor yang diperoleh Andi adalah ....",
-        options: ["93", "98", "103", "112"],
-        answer: 0,
-        explanation: "Tidak dijawab = 40 - (28 + 7) = 5 soal. Skor = (28 × 4) + (7 × -2) + (5 × -1) = 112 - 14 - 5 = 93."
-      },
-      {
-        question: "Sifat operasi hitung yang berlaku pada persamaan (-7 + 5) + 9 = -7 + (5 + 9) adalah sifat ....",
-        options: ["Komutatif", "Asosiatif", "Distributif", "Identitas"],
+        topic: "Bilangan Berpangkat",
+        question: "Nilai dari 2⁵ + 3³ - 5² adalah ....",
+        options: ["24", "34", "44", "54"],
         answer: 1,
-        explanation: "Pengelompokan tanda kurung yang berbeda pada penjumlahan tanpa mengubah hasil disebut sifat Asosiatif."
+        explanation: "2⁵ = 32, 3³ = 27, dan 5² = 25. Maka 32 + 27 - 25 = 34."
       },
       {
-        question: "Selisih antara bilangan -18 dan 14 adalah ....",
-        options: ["-32", "-4", "4", "32"],
-        answer: 3,
-        explanation: "Selisih adalah bilangan terbesar dikurangi bilangan terkecil: 14 - (-18) = 14 + 18 = 32."
+        topic: "Bilangan Desimal",
+        question: "Hasil dari 4,5 × 0,4 + 1,2 adalah ....",
+        options: ["1,8", "3,0", "3,2", "19,2"],
+        answer: 1,
+        explanation: "4,5 × 0,4 = 1,8. Kemudian 1,8 + 1,2 = 3,0."
+      },
+      {
+        topic: "Bilangan Prima",
+        question: "Jumlah semua bilangan prima yang terletak di antara 10 dan 25 adalah ....",
+        options: ["72", "83", "85", "98"],
+        answer: 1,
+        explanation: "Bilangan prima antara 10 dan 25 adalah 11, 13, 17, 19, dan 23. Jumlahnya: 11 + 13 + 17 + 19 + 23 = 83."
+      },
+      {
+        topic: "Persen & Pecahan",
+        question: "Ibu membeli baju seharga Rp150.000,00 dengan diskon 20%. Uang yang harus dibayarkan Ibu adalah ....",
+        options: ["Rp30.000,00", "Rp120.000,00", "Rp130.000,00", "Rp140.000,00"],
+        answer: 1,
+        explanation: "Besar diskon = 20% × 150.000 = Rp30.000. Harga bayar = 150.000 - 30.000 = Rp120.000,00."
+      },
+      {
+        topic: "Pola Bilangan",
+        question: "Dua suku berikutnya dari barisan bilangan 2, 5, 9, 14, 20, ..., ... adalah ....",
+        options: ["26, 33", "27, 35", "27, 34", "28, 36"],
+        answer: 1,
+        explanation: "Pola penambahannya bertingkat: +3, +4, +5, +6. Maka berikutnya +7 (20 + 7 = 27) dan +8 (27 + 8 = 35)."
+      },
+      {
+        topic: "Akar Kuadrat",
+        question: "Hasil dari √144 + √81 - √64 adalah ....",
+        options: ["11", "13", "15", "29"],
+        answer: 1,
+        explanation: "√144 = 12, √81 = 9, dan √64 = 8. Maka 12 + 9 - 8 = 13."
       }
     ];
 
@@ -353,9 +375,3 @@
     let correctCount = 0;
     const optionLetters = ["A", "B", "C", "D"];
 
-    const questionCounter = document.getElementById("questionCounter");
-    const scoreDisplay = document.getElementById("scoreDisplay");
-    const progressFill = document.getElementById("progressFill");
-    const questionText = document.getElementById("questionText");
-    const optionsList = document.getElementById("optionsList");
-    const feedbackBox = document.getElementById("feedbackBox");
