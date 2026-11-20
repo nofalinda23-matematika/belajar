@@ -1,412 +1,301 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Daftar Nilai Online Multi-Kelas</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CBT Ujian Online - Sistem Pengawas Ketat</title>
   <style>
-    :root {
-      --primary: #2563eb;
-      --primary-hover: #1d4ed8;
-      --success: #16a34a;
-      --success-hover: #15803d;
-      --danger: #dc2626;
-      --danger-hover: #b91c1c;
-      --bg: #f8fafc;
-      --card: #ffffff;
-      --text: #1e293b;
-      --border: #cbd5e1;
-    }
-
     * {
       box-sizing: border-box;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-
-    body {
       margin: 0;
-      padding: 20px;
-      background-color: var(--bg);
-      color: var(--text);
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      user-select: none; /* Mencegah siswa menyalin teks soal */
     }
-
-    .app-container {
-      max-width: 1100px;
-      margin: 0 auto;
-      background: var(--card);
-      border-radius: 14px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
-      border: 1px solid var(--border);
-      overflow: hidden;
+    body {
+      background-color: #f1f5f9;
+      color: #0f172a;
+      min-height: 100vh;
     }
-
-    /* Header */
-    .header {
-      background: linear-gradient(135deg, #1e3a8a, #2563eb);
+    /* Navbar */
+    .navbar {
+      background-color: #0f172a;
       color: white;
-      padding: 20px 24px;
+      padding: 15px 30px;
       display: flex;
-      flex-wrap: wrap;
       justify-content: space-between;
       align-items: center;
-      gap: 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+    .navbar h1 { font-size: 1.2rem; color: #38bdf8; }
+    .timer-badge {
+      background: #ef4444;
+      padding: 6px 14px;
+      border-radius: 6px;
+      font-weight: bold;
+      font-size: 1.1rem;
     }
 
-    .header h1 {
-      margin: 0;
-      font-size: 1.5rem;
+    /* Container Utama */
+    .container {
+      max-width: 800px;
+      margin: 30px auto;
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.08);
     }
 
-    .header p {
-      margin: 4px 0 0 0;
-      font-size: 0.9rem;
-      opacity: 0.9;
+    /* Form Login */
+    .form-group { margin-bottom: 18px; }
+    label { display: block; margin-bottom: 6px; font-weight: 600; }
+    input[type="text"], select {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 1rem;
+      user-select: auto;
     }
-
-    .header-actions {
-      display: flex;
-      gap: 10px;
-    }
-
-    /* Navigasi Tab Kelas */
-    .tabs-bar {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      background: #f1f5f9;
-      padding: 10px 20px 0;
-      border-bottom: 1px solid var(--border);
-      gap: 6px;
-    }
-
-    .tab-btn {
-      padding: 10px 18px;
-      border: 1px solid transparent;
-      border-bottom: none;
-      border-radius: 8px 8px 0 0;
-      background: #e2e8f0;
-      color: #475569;
-      font-weight: 600;
-      cursor: pointer;
-      font-size: 0.95rem;
-      transition: all 0.2s;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .tab-btn:hover {
-      background: #cbd5e1;
-      color: #0f172a;
-    }
-
-    .tab-btn.active {
-      background: #ffffff;
-      color: var(--primary);
-      border-color: var(--border);
-      margin-bottom: -1px;
-      padding-bottom: 11px;
-    }
-
-    .btn-add-class {
-      padding: 8px 14px;
-      margin-bottom: 6px;
-      background: var(--success);
-      color: white;
+    .btn {
+      padding: 12px 24px;
       border: none;
       border-radius: 8px;
-      font-weight: 600;
-      font-size: 0.9rem;
+      font-size: 1rem;
+      font-weight: bold;
       cursor: pointer;
-      margin-left: auto;
+      transition: 0.2s;
     }
+    .btn-primary { background-color: #0284c7; color: white; width: 100%; }
+    .btn-primary:hover { background-color: #0369a1; }
+    .btn-success { background-color: #16a34a; color: white; }
+    .btn-danger { background-color: #dc2626; color: white; }
 
-    .btn-add-class:hover {
-      background: var(--success-hover);
-    }
-
-    /* Area Kontrol Siswa */
-    .toolbar {
-      padding: 18px 24px;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
+    /* Area Soal */
+    .soal-box {
+      margin-bottom: 25px;
+      padding-bottom: 20px;
       border-bottom: 1px solid #e2e8f0;
     }
-
-    .add-student-form {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      flex: 1;
-    }
-
-    input[type="text"], input[type="number"] {
-      padding: 8px 12px;
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      font-size: 0.95rem;
-    }
-
-    input[type="number"] {
-      width: 75px;
-      text-align: center;
-    }
-
-    input[type="number"]:focus, input[type="text"]:focus {
-      outline: none;
-      border-color: var(--primary);
-    }
-
-    .btn {
-      padding: 8px 16px;
-      border: none;
-      border-radius: 6px;
-      font-weight: 600;
-      font-size: 0.9rem;
-      cursor: pointer;
-      transition: background 0.2s;
-    }
-
-    .btn-primary {
-      background: var(--primary);
-      color: white;
-    }
-
-    .btn-primary:hover {
-      background: var(--primary-hover);
-    }
-
-    .btn-success {
-      background: var(--success);
-      color: white;
-    }
-
-    .btn-success:hover {
-      background: var(--success-hover);
-    }
-
-    .btn-danger {
-      background: var(--danger);
-      color: white;
-      padding: 6px 10px;
-      font-size: 0.85rem;
-    }
-
-    .btn-danger:hover {
-      background: var(--danger-hover);
-    }
-
-    .btn-outline {
-      background: rgba(255, 255, 255, 0.15);
-      color: white;
-      border: 1px solid rgba(255, 255, 255, 0.4);
-    }
-
-    .btn-outline:hover {
-      background: rgba(255, 255, 255, 0.25);
-    }
-
-    /* Tabel Nilai */
-    .table-wrapper {
-      padding: 0 24px 24px;
-      overflow-x: auto;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 16px;
-      font-size: 0.95rem;
-    }
-
-    th, td {
-      border: 1px solid var(--border);
-      padding: 10px 12px;
-      text-align: center;
-    }
-
-    th {
+    .soal-text { font-size: 1.1rem; font-weight: 600; margin-bottom: 12px; }
+    .opsi-label {
+      display: block;
+      padding: 10px 15px;
+      margin-bottom: 8px;
       background: #f8fafc;
-      color: #334155;
-      font-weight: 700;
-    }
-
-    td.name-col {
-      text-align: left;
-      font-weight: 500;
-    }
-
-    tr:hover {
-      background-color: #f8fafc;
-    }
-
-    .badge {
-      padding: 4px 10px;
-      border-radius: 999px;
-      font-weight: 700;
-      font-size: 0.85rem;
-    }
-
-    .grade-A { background: #dcfce7; color: #166534; }
-    .grade-B { background: #dbeafe; color: #1e40af; }
-    .grade-C { background: #fef9c3; color: #854d0e; }
-    .grade-D { background: #fee2e2; color: #991b1b; }
-
-    .summary-bar {
-      margin-top: 16px;
-      padding: 12px 16px;
-      background: #f1f5f9;
+      border: 1px solid #cbd5e1;
       border-radius: 8px;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
+      cursor: pointer;
+    }
+    .opsi-label:hover { background: #e0f2fe; border-color: #0284c7; }
+    input[type="radio"] { margin-right: 10px; }
+
+    /* LAYAR KUNCI PELANGGARAN (OVERLAY) */
+    #lockOverlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(15, 23, 42, 0.97);
+      z-index: 9999;
+      color: white;
+      flex-direction: column;
       align-items: center;
-      font-size: 0.9rem;
-      gap: 10px;
+      justify-content: center;
+      text-align: center;
+      padding: 20px;
+    }
+    .lock-card {
+      background: #1e293b;
+      border: 2px solid #ef4444;
+      padding: 35px;
+      border-radius: 16px;
+      max-width: 500px;
+      width: 100%;
+    }
+    .lock-card h2 { color: #ef4444; font-size: 1.8rem; margin-bottom: 10px; }
+    .lock-card p { color: #cbd5e1; margin-bottom: 20px; line-height: 1.5; }
+    .token-input {
+      text-align: center;
+      font-size: 1.3rem !important;
+      letter-spacing: 3px;
+      font-weight: bold;
+      margin-bottom: 15px;
     }
 
-    .empty-state {
-      text-align: center;
-      padding: 32px;
-      color: #64748b;
+    /* Tombol Bantuan Admin (Hanya untuk simulasi guru) */
+    .admin-float {
+      position: fixed;
+      bottom: 15px;
+      right: 15px;
+      background: #334155;
+      color: #94a3b8;
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      z-index: 10000;
     }
+    .hidden { display: none !important; }
   </style>
 </head>
-<body>
+<body oncontextmenu="return false;">
 
-  <div class="app-container">
-    <!-- Header -->
-    <div class="header">
-      <div>
-        <h1>Daftar Nilai Siswa Online</h1>
-        <p>Data tersimpan otomatis di perangkat Anda &bull; Mendukung penambahan kelas tanpa batas</p>
-      </div>
-      <div class="header-actions">
-        <button class="btn btn-success" onclick="exportToCSV()">📥 Unduh Excel (CSV)</button>
-        <button class="btn btn-outline" onclick="resetDefaultData()">↺ Reset Data Awal</button>
-      </div>
-    </div>
-
-    <!-- Tab Daftar Kelas -->
-    <div class="tabs-bar" id="tabsBar">
-      <!-- Tab kelas akan dimuat otomatis oleh JavaScript -->
-    </div>
-
-    <!-- Toolbar Tambah Siswa & Hapus Kelas -->
-    <div class="toolbar">
-      <div class="add-student-form">
-        <input type="text" id="newStudentName" placeholder="Ketik nama siswa baru..." onkeypress="handleEnter(event)" />
-        <button class="btn btn-primary" onclick="addStudent()">+ Tambah Siswa</button>
-      </div>
-      <div>
-        <button class="btn btn-danger" onclick="deleteCurrentClass()" id="deleteClassBtn">🗑 Hapus Kelas Ini</button>
-      </div>
-    </div>
-
-    <!-- Area Tabel Nilai -->
-    <div class="table-wrapper">
-      <table>
-        <thead>
-          <tr>
-            <th style="width: 50px;">No</th>
-            <th style="text-align: left;">Nama Siswa</th>
-            <th style="width: 100px;">Tugas</th>
-            <th style="width: 100px;">UH / Kuis</th>
-            <th style="width: 100px;">UTS</th>
-            <th style="width: 100px;">UAS</th>
-            <th style="width: 110px;">Rata-rata</th>
-            <th style="width: 100px;">Predikat</th>
-            <th style="width: 80px;">Aksi</th>
-          </tr>
-        </thead>
-        <tbody id="studentTableBody">
-          <!-- Baris siswa dimuat otomatis -->
-        </tbody>
-      </table>
-
-      <div class="summary-bar" id="summaryBar">
-        <!-- Ringkasan kelas -->
-      </div>
+  <div class="navbar">
+    <h1>CBT UJIAN ONLINE SEKOLAH</h1>
+    <div id="infoSiswa" class="hidden">
+      <span id="displayNama" style="margin-right: 15px;"></span>
+      <span class="timer-badge" id="timer">60:00</span>
     </div>
   </div>
 
+  <!-- HALAMAN 1: LOGIN SISWA -->
+  <div class="container" id="loginPage">
+    <h2 style="margin-bottom: 10px;">Data Peserta Ujian</h2>
+    <p style="color: #64748b; margin-bottom: 20px; font-size: 0.95rem;">
+      <strong>PERINGATAN:</strong> Sistem ini dilengkapi pendeteksi kecurangan. Jika Anda berpindah tab, membuka aplikasi lain, atau keluar dari mode layar penuh, ujian akan <strong>TERKUNCI OTOMATIS</strong> dan harus meminta izin Admin.
+    </p>
+    <div class="form-group">
+      <label>Nomor Peserta / NISN</label>
+      <input type="text" id="nisn" placeholder="Contoh: 0081234567" required>
+    </div>
+    <div class="form-group">
+      <label>Nama Lengkap Siswa</label>
+      <input type="text" id="namaSiswa" placeholder="Masukkan nama lengkap Anda" required>
+    </div>
+    <div class="form-group">
+      <label>Kelas</label>
+      <select id="kelasSiswa">
+        <option value="IX-A">Kelas IX - A</option>
+        <option value="IX-B">Kelas IX - B</option>
+        <option value="IX-C">Kelas IX - C</option>
+      </select>
+    </div>
+    <button class="btn btn-primary" onclick="mulaiUjian()">MULAI UJIAN (LAYAR PENUH)</button>
+  </div>
+
+  <!-- HALAMAN 2: LEMBAR SOAL UJIAN -->
+  <div class="container hidden" id="examPage">
+    <div id="daftarSoal"></div>
+    <button class="btn btn-success" style="width: 100%; margin-top: 15px;" onclick="selesaiUjian()">KUMPULKAN JAWABAN</button>
+  </div>
+
+  <!-- HALAMAN 3: SELESAI -->
+  <div class="container hidden" id="finishPage" style="text-align: center;">
+    <h2 style="color: #16a34a; margin-bottom: 10px;">Ujian Telah Selesai!</h2>
+    <p id="hasilText" style="font-size: 1.1rem; margin-bottom: 20px;"></p>
+  </div>
+
+  <!-- LAYAR KUNCI PELANGGARAN -->
+  <div id="lockOverlay">
+    <div class="lock-card">
+      <h2>⚠️ PELANGGARAN TERDETEKSI!</h2>
+      <p id="alasanPelanggaran">Anda terdeteksi meninggalkan halaman ujian / membuka tab lain.</p>
+      <div style="background: #0f172a; padding: 12px; border-radius: 8px; margin-bottom: 20px; font-size: 0.9rem;">
+        Status: <strong style="color: #f87171;">AKUN TERKUNCI</strong><br>
+        Total Pelanggaran: <strong id="jumlahPelanggaran">1</strong>x<br>
+        Silakan lapor ke Pengawas / Admin untuk mendapatkan <strong>Kode Izin Lanjut</strong>.
+      </div>
+      <input type="text" id="inputTokenAdmin" class="token-input" placeholder="KODE IZIN ADMIN">
+      <button class="btn btn-danger" style="width: 100%;" onclick="bukaKunciUjian()">BUKA KUNCI & LANJUTKAN</button>
+      <p id="pesanTokenSalah" style="color: #fca5a5; font-size: 0.85rem; margin-top: 10px;"></p>
+    </div>
+  </div>
+
+  <!-- TOMBOL SIMULASI INFO KODE ADMIN -->
+  <div class="admin-float" onclick="alert('INFO UNTUK ADMIN/GURU:\n\nKode Izin Buka Kunci saat ini adalah: IZIN2026\n\n(Pada sistem server penuh, kode ini bisa dibuat dinamis per siswa dari dashboard Admin)')">
+    🔑 Info Kode Admin
+  </div>
+
   <script>
-    const STORAGE_KEY = 'daftar_nilai_online_v1';
+    // --- KONFIGURASI UJIAN ---
+    const KODE_IZIN_ADMIN = "IZIN2026"; // Kode rahasia yang dipegang Admin/Pengawas
+    let ujianAktif = false;
+    let terkunci = false;
+    let hitungPelanggaran = 0;
+    let sisaWaktu = 60 * 60; // 60 menit dalam detik
+    let timerInterval;
 
-    // Data awal 4 kelas
-    const defaultData = {
-      activeClassId: 'kls-1',
-      classes: [
-        {
-          id: 'kls-1',
-          name: 'Kelas VII-A',
-          students: [
-            { id: 1, name: 'Ahmad Fauzan', tugas: 85, uh: 88, uts: 82, uas: 90 },
-            { id: 2, name: 'Bunga Citra', tugas: 92, uh: 90, uts: 88, uas: 94 },
-            { id: 3, name: 'Daffa Pratama', tugas: 75, uh: 70, uts: 78, uas: 80 }
-          ]
-        },
-        {
-          id: 'kls-2',
-          name: 'Kelas VII-B',
-          students: [
-            { id: 1, name: 'Citra Kirana', tugas: 88, uh: 85, uts: 84, uas: 89 },
-            { id: 2, name: 'Dimas Anggara', tugas: 68, uh: 72, uts: 65, uas: 70 }
-          ]
-        },
-        {
-          id: 'kls-3',
-          name: 'Kelas VIII-A',
-          students: [
-            { id: 1, name: 'Eka Putri', tugas: 95, uh: 92, uts: 90, uas: 96 },
-            { id: 2, name: 'Farhan Kamil', tugas: 80, uh: 78, uts: 82, uas: 85 }
-          ]
-        },
-        {
-          id: 'kls-4',
-          name: 'Kelas VIII-B',
-          students: [
-            { id: 1, name: 'Gita Gutawa', tugas: 84, uh: 86, uts: 80, uas: 88 },
-            { id: 2, name: 'Hendra Setiawan', tugas: 76, uh: 74, uts: 79, uas: 81 }
-          ]
-        }
-      ]
-    };
-
-    let appData = loadData();
-
-    function loadData() {
-      const saved = localStorage.getItem(STORAGE_KEY);
-      if (saved) {
-        try {
-          return JSON.parse(saved);
-        } catch (e) {
-          return JSON.parse(JSON.stringify(defaultData));
-        }
+    // Contoh Bank Soal
+    const bankSoal = [
+      {
+        tanya: "1. Gradien garis yang melalui titik A(2, 3) dan B(4, 7) adalah...",
+        opsi: ["A. 1", "B. 2", "C. 3", "D. 4"],
+        kunci: 1
+      },
+      {
+        tanya: "2. Jika sebuah garis condong ke kiri dari atas ke bawah, maka nilai gradiennya adalah...",
+        opsi: ["A. Positif", "B. Negatif", "C. Nol", "D. Tak terdefinisi"],
+        kunci: 1
+      },
+      {
+        tanya: "3. Gradien garis dengan persamaan y = -3x + 5 adalah...",
+        opsi: ["A. 5", "B. 3", "C. -3", "D. -5"],
+        kunci: 2
       }
-      return JSON.parse(JSON.stringify(defaultData));
+    ];
+
+    // --- MULAI UJIAN ---
+    function mulaiUjian() {
+      const nisn = document.getElementById('nisn').value.trim();
+      const nama = document.getElementById('namaSiswa').value.trim();
+      const kelas = document.getElementById('kelasSiswa').value;
+
+      if (!nisn || !nama) {
+        alert("Harap isi Nomor Peserta dan Nama Lengkap terlebih dahulu!");
+        return;
+      }
+
+      // Masuk ke Mode Fullscreen (Layar Penuh)
+      const elem = document.documentElement;
+      if (elem.requestFullscreen) {
+        elem.requestFullscreen().catch(() => {});
+      }
+
+      document.getElementById('loginPage').classList.add('hidden');
+      document.getElementById('examPage').classList.remove('hidden');
+      document.getElementById('infoSiswa').classList.remove('hidden');
+      document.getElementById('displayNama').innerText = `${nama} (${kelas})`;
+
+      renderSoal();
+      ujianAktif = true;
+      mulaiTimer();
     }
 
-    function saveData() {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
+    function renderSoal() {
+      const container = document.getElementById('daftarSoal');
+      container.innerHTML = bankSoal.map((item, idx) => `
+        <div class="soal-box">
+          <div class="soal-text">${item.tanya}</div>
+          ${item.opsi.map((opt, i) => `
+            <label class="opsi-label">
+              <input type="radio" name="soal_${idx}" value="${i}"> ${opt}
+            </label>
+          `).join('')}
+        </div>
+      `).join('');
     }
 
-    function getActiveClass() {
-      return appData.classes.find(c => c.id === appData.activeClassId) || appData.classes[0];
+    function mulaiTimer() {
+      timerInterval = setInterval(() => {
+        if (!terkunci && ujianAktif) {
+          sisaWaktu--;
+          const menit = Math.floor(sisaWaktu / 60);
+          const detik = sisaWaktu % 60;
+          document.getElementById('timer').innerText =
+            `${String(menit).padStart(2, '0')}:${String(detik).padStart(2, '0')}`;
+
+          if (sisaWaktu <= 0) {
+            selesaiUjian(true);
+          }
+        }
+      }, 1000);
     }
 
-    // Render Tab Kelas
-    function renderTabs() {
-      const tabsBar = document.getElementById('tabsBar');
-      tabsBar.innerHTML = '';
+    // --- SISTEM DETEKSI PINDAH TAB / APLIKASI (ANTI-CHEAT) ---
+    function picuPelanggaran(alasan) {
+      if (!ujianAktif || terkunci) return;
 
-      appData.classes.forEach(cls => {
-        const btn = document.createElement('button');
-        btn.className = `tab-btn ${cls.id === appData.activeClassId ? 'active' : ''}`;
-        btn.innerHTML = `<span>${cls.name}</span> <small style="opacity:0.7;">(${cls.students.length})</small>`;
-        btn.onclick = () => {
-          appData.activeClassId = cls.id;
-          saveData();
+      terkunci = true;
+      hitungPelanggaran++;
+
+      document.getElementById('alasanPelanggaran').innerText = alasan;
